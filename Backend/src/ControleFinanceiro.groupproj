@@ -1,0 +1,36 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{49498FE8-CCB9-4D00-84B8-F92CB6168FAF}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="ControleFinanceiroAPI.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="ControleFinanceiroAPI">
+        <MSBuild Projects="ControleFinanceiroAPI.dproj"/>
+    </Target>
+    <Target Name="ControleFinanceiroAPI:Clean">
+        <MSBuild Projects="ControleFinanceiroAPI.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ControleFinanceiroAPI:Make">
+        <MSBuild Projects="ControleFinanceiroAPI.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="ControleFinanceiroAPI"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="ControleFinanceiroAPI:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="ControleFinanceiroAPI:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

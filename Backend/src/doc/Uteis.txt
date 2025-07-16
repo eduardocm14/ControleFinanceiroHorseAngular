@@ -1,0 +1,17 @@
+http://localhost:9000//swagger/doc/html
+
+Links uteis horse:
+https://github.com/HashLoad/boss
+
+Comandos:
+boss install horse
+boss init
+
+
+-------
+Angular
+Comando:	O que faz
+ng serve(rodar servidor front)
+ng build	Compila o projeto Angular
+ng build --watch	Compila e reescuta mudanças
+npx tsc --noEmit	Verifica apenas os erros TypeScript
