@@ -22,6 +22,9 @@ type
 
 implementation
 
+uses
+  System.DateUtils;
+
 { TContaDAO }
 
 class function TContaDAO.GetAll: TJSONArray;
@@ -107,7 +110,10 @@ class function TContaDAO.Insert(AJson: TJSONObject): Boolean;
 var
   Conexao: TConexaoODBC;
   Qry: TADOQuery;
-  S: string;
+  JsonValue: TJSONValue;
+  NomeStr: string;
+  ValorFloat: Double;
+  DataVencimentoDT: TDateTime;
 begin
   Result := False;
   Conexao := TConexaoODBC.Create;
@@ -119,16 +125,39 @@ begin
       'INSERT INTO "Contas" ("Nome", "Valor", "DataVencimento", "DataPagamento", "Pago") ' +
       'VALUES (:Nome, :Valor, :DataVencimento, :DataPagamento, :Pago)';
 
-    Qry.Parameters.ParamByName('Nome').Value := AJson.GetValue<string>('nome');
-    Qry.Parameters.ParamByName('Valor').Value := AJson.GetValue<Double>('valor');
-    Qry.Parameters.ParamByName('DataVencimento').Value := AJson.GetValue<string>('dataVencimento');
-
-    if AJson.TryGetValue<string>('dataPagamento', S) then
-      Qry.Parameters.ParamByName('DataPagamento').Value := S
+    // Nome (string)
+    JsonValue := AJson.GetValue('nome');
+    if Assigned(JsonValue) and (JsonValue is TJSONString) then
+      NomeStr := TJSONString(JsonValue).Value
     else
-      Qry.Parameters.ParamByName('DataPagamento').Value := Null;
+      raise Exception.Create('Campo "nome" obrigatório e deve ser string');
 
-    Qry.Parameters.ParamByName('Pago').Value := AJson.GetValue<Boolean>('pago');
+    // Valor (float)
+    JsonValue := AJson.GetValue('valor');
+    if Assigned(JsonValue) then
+    begin
+      if JsonValue is TJSONNumber then
+        ValorFloat := TJSONNumber(JsonValue).AsDouble
+      else if JsonValue is TJSONString then
+        ValorFloat := StrToFloatDef(TJSONString(JsonValue).Value, 0)
+      else
+        ValorFloat := 0;
+    end
+    else
+      ValorFloat := 0;
+
+    // DataVencimento (datetime obrigatório)
+    JsonValue := AJson.GetValue('dataVencimento');
+    if Assigned(JsonValue) and (JsonValue is TJSONString) and (Trim(TJSONString(JsonValue).Value) <> '') then
+      DataVencimentoDT := ISO8601ToDate(TJSONString(JsonValue).Value)
+    else
+      raise Exception.Create('Campo "dataVencimento" obrigatório e deve ser string no formato ISO8601');
+
+    // Assign parameters
+    Qry.Parameters.ParamByName('Nome').Value := NomeStr;
+    Qry.Parameters.ParamByName('Valor').Value := ValorFloat;
+    Qry.Parameters.ParamByName('DataVencimento').Value := DataVencimentoDT;
+    Qry.Parameters.ParamByName('Pago').Value := False;
 
     Qry.ExecSQL;
     Result := True;
