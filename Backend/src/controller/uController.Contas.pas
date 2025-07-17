@@ -41,6 +41,12 @@ type
     [SwagResponse(THTTPStatus.NOT_FOUND, nil, 'Conta não encontrada')]
     procedure DoGetById;
 
+    [SwagGET('contas/por-vencimento', 'Listar contas por intervalo de vencimento')]
+    [SwagParamQuery('dataInicial', 'Data inicial (yyyy-mm-dd)', true)]
+    [SwagParamQuery('dataFinal', 'Data final (yyyy-mm-dd)', true)]
+    [SwagResponse(THTTPStatus.OK, TConta, 'Contas dentro do intervalo')]
+    procedure DoListByVencimento;
+
     [SwagPOST('contas', 'Criar nova conta')]
     [SwagParamBody('body', TConta, true, 'Nova conta')]
     [SwagResponse(THTTPStatus.HTTP_CREATED, nil, 'Criado com sucesso')]
@@ -75,7 +81,7 @@ uses
   Horse.Request,
   Horse.Response,
   GBSwagger.Resources,
-  System.Generics.Collections;
+  System.Generics.Collections, System.DateUtils;
 
 { TControllerConta }
 
@@ -113,6 +119,46 @@ begin
   else
     FResponse.Status(THTTPStatus.NOT_FOUND)
       .Send('{"erro":"Conta não encontrada"}');
+end;
+
+procedure TControllerConta.DoListByVencimento;
+var
+  DataInicialStr, DataFinalStr: string;
+  DataInicial, DataFinal: TDate;
+  Lista: TJSONArray;
+  Resposta: TJSONObject;
+begin
+  try
+    DataInicialStr := FRequest.Query['dataInicial'];
+    DataFinalStr := FRequest.Query['dataFinal'];
+
+    if (DataInicialStr = '') or (DataFinalStr = '') then
+      raise Exception.Create('Parâmetros dataInicial e dataFinal são obrigatórios.');
+
+    // Converte as strings para datas
+    DataInicial := ISO8601ToDate(DataInicialStr);
+    DataFinal := ISO8601ToDate(DataFinalStr);
+
+    Lista := TContaDAO.GetByDataVencimento(DataInicial, DataFinal);
+
+    // Cria objeto de resposta com count e dados
+    Resposta := TJSONObject.Create;
+    try
+      Resposta.AddPair('quantidade', TJSONNumber.Create(Lista.Count));
+      Resposta.AddPair('dados', Lista); // transfere posse do array para o objeto
+
+      FResponse
+        .ContentType('application/json')
+        .Send(Resposta.ToJSON);
+    finally
+      Resposta.Free; // libera o objeto, mas não o array (foi transferido)
+    end;
+  except
+    on E: Exception do
+      FResponse.Status(THTTPStatus.BAD_REQUEST)
+        .ContentType('application/json')
+        .Send(Format('{"erro":"%s"}', [E.Message]));
+  end;
 end;
 
 procedure TControllerConta.DoPost;
