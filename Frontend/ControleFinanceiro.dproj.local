@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2025/07/08 16:25:57.000.942,=C:\Users\AQUASOFT\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2025/07/17 20:09:40.941,=C:\Users\AQUASOFT\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2025/07/17 20:10:04.812,D:\Eduardo\Delphi\ControleFinanceiroHorseAngular\Frontend\UfrmPrincipal.dfm=C:\Users\AQUASOFT\Documents\Embarcadero\Studio\Projects\Unit2.dfm</Transaction>
+    <Transaction>2025/07/17 20:10:04.812,D:\Eduardo\Delphi\ControleFinanceiroHorseAngular\Frontend\UfrmPrincipal.pas=C:\Users\AQUASOFT\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2025/07/17 20:10:19.555,D:\Eduardo\Delphi\ControleFinanceiroHorseAngular\Frontend\ControleFinanceiro.dproj=C:\Users\AQUASOFT\Documents\Embarcadero\Studio\Projects\Project2.dproj</Transaction>
+  </Transactions>
+</BorlandProject>

@@ -6,6 +6,9 @@
         <Projects Include="ControleFinanceiroAPI.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="..\..\Frontend\ControleFinanceiro.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -23,14 +26,23 @@
     <Target Name="ControleFinanceiroAPI:Make">
         <MSBuild Projects="ControleFinanceiroAPI.dproj" Targets="Make"/>
     </Target>
+    <Target Name="ControleFinanceiro">
+        <MSBuild Projects="..\..\Frontend\ControleFinanceiro.dproj"/>
+    </Target>
+    <Target Name="ControleFinanceiro:Clean">
+        <MSBuild Projects="..\..\Frontend\ControleFinanceiro.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ControleFinanceiro:Make">
+        <MSBuild Projects="..\..\Frontend\ControleFinanceiro.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="ControleFinanceiroAPI"/>
+        <CallTarget Targets="ControleFinanceiroAPI;ControleFinanceiro"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="ControleFinanceiroAPI:Clean"/>
+        <CallTarget Targets="ControleFinanceiroAPI:Clean;ControleFinanceiro:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="ControleFinanceiroAPI:Make"/>
+        <CallTarget Targets="ControleFinanceiroAPI:Make;ControleFinanceiro:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
