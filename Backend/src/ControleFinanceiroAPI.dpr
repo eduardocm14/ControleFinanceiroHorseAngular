@@ -5,16 +5,20 @@ program ControleFinanceiroAPI;
 {$R *.res}
 
 uses
+  // Middlewares
   Horse,
   Horse.Jhonson,
   Horse.GBSwagger,
+  uBrowserHelper in 'infrastructure\uBrowserHelper.pas',
+
+  // Units
   uConexaoSQLServer in 'infrastructure\uConexaoSQLServer.pas',
   uTesteConexao in 'infrastructure\uTesteConexao.pas',
   uConexaoODBC in 'infrastructure\uConexaoODBC.pas',
   uContaDAO in 'dao\uContaDAO.pas',
   uConta in 'model\uConta.pas',
-  uController.Contas in 'controller\uController.Contas.pas',
-  uBrowserHelper in 'infrastructure\uBrowserHelper.pas';
+  uController.Contas in 'controller\uController.Contas.pas';
+
 
 begin
   Writeln('Servidor rodando com Swagger em http://localhost:9000//swagger/doc/html');
